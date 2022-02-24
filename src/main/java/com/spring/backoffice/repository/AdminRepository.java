@@ -11,5 +11,5 @@ import java.util.List;
 @Transactional
 public interface AdminRepository extends JpaRepository<Admin, Long> {
 
-    List<Admin> findByUsernameAndMdp(String username, String mdp);
+    List<Admin> findByEmailAndMdp(String email, String mdp);
 }

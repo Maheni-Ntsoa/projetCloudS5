@@ -23,3 +23,4 @@ public interface SignalementRepository extends JpaRepository<Signalement, Long> 
     List<Signalement> findByIdRegionNull();
 
 }
+

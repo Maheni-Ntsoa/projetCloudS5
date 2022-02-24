@@ -21,7 +21,7 @@ public interface SignalementCompletRepository extends JpaRepository<SignalementC
             "        idStatut,\n" +
             "        nom,\n" +
             "        prenom,\n" +
-            "        username,\n" +
+            "        email,\n" +
             "        dateHeure,\n" +
             "        designation,\n" +
             "        typeSignalement,\n" +
@@ -30,7 +30,7 @@ public interface SignalementCompletRepository extends JpaRepository<SignalementC
             "    FROM signalement_complet\n" +
             "\t where idclient = :idclient and id = :id \n" +
             "    GROUP BY id, idClient, idTypeSignalement,\n" +
-            "            idRegion, idStatut, nom, prenom, username,\n" +
+            "            idRegion, idStatut, nom, prenom, email,\n" +
             "            dateHeure, designation,\n" +
             "            typeSignalement, nomRegion, nomStatut ", nativeQuery = true)
     SignalementComplet findByIdclientAndAndId(@Param("idclient") Long idclient,
@@ -44,7 +44,7 @@ public interface SignalementCompletRepository extends JpaRepository<SignalementC
             "        idStatut,\n" +
             "        nom,\n" +
             "        prenom,\n" +
-            "        username,\n" +
+            "        email,\n" +
             "        dateHeure,\n" +
             "        designation,\n" +
             "        typeSignalement,\n" +
@@ -54,9 +54,31 @@ public interface SignalementCompletRepository extends JpaRepository<SignalementC
             "\t where idtypesignalement = :idtypesignalement\n" +
             "   and idstatut = :idstatut\n" +
             "    GROUP BY id, idClient, idTypeSignalement,\n" +
-            "            idRegion, idStatut, nom, prenom, username,\n" +
+            "            idRegion, idStatut, nom, prenom, email,\n" +
             "            dateHeure, designation,\n" +
             "            typeSignalement, nomRegion, nomStatut ", nativeQuery = true)
     List<SignalementComplet> findByIdTypesignalementAndIdstatut(@Param("idtypesignalement") Long idtypesignalement,
                                                                 @Param("idstatut") Long idstatut);
+
+
+    @Query(value = "SELECT  id,\n" +
+            "        idClient,\n" +
+            "        idTypeSignalement,\n" +
+            "        idRegion,\n" +
+            "        idStatut,\n" +
+            "        nom,\n" +
+            "        prenom,\n" +
+            "        email,\n" +
+            "        dateHeure,\n" +
+            "        designation,\n" +
+            "        typeSignalement,\n" +
+            "        nomRegion,\n" +
+            "        nomStatut\n" +
+            "    FROM signalement_complet\n" +
+            "    GROUP BY id, idClient, idTypeSignalement,\n" +
+            "            idRegion, idStatut, nom, prenom, email,\n" +
+            "            dateHeure, designation,\n" +
+            "            typeSignalement, nomRegion, nomStatut " +
+            "   ORDER BY dateHeure desc", nativeQuery = true)
+    List<SignalementComplet> findToutOrderDate();
 }

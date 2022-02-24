@@ -1,11 +1,11 @@
 package com.spring.backoffice.model;
-import jdk.nashorn.internal.ir.annotations.Immutable;
+
 import org.hibernate.annotations.Subselect;
 
 import javax.persistence.*;
 
 @Entity
-@Immutable
+@org.hibernate.annotations.Immutable
 @Table(name = "`signalement_statut`")
 @Subselect("SELECT  nomStatut,\n" +
         "        count(idRegion) AS Nombre\n" +

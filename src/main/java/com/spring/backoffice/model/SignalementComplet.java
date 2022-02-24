@@ -1,6 +1,5 @@
 package com.spring.backoffice.model;
 
-import jdk.nashorn.internal.ir.annotations.Immutable;
 import org.hibernate.annotations.Subselect;
 
 import javax.persistence.Entity;
@@ -8,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Immutable
+@org.hibernate.annotations.Immutable
 @Table(name = "`signalement_complet`")
 @Subselect(" SELECT  id,\n" +
         "        idClient,\n" +
@@ -17,7 +16,7 @@ import javax.persistence.Table;
         "        idStatut,\n" +
         "        nom,\n" +
         "        prenom,\n" +
-        "        username,\n" +
+        "        email,\n" +
         "        dateHeure,\n" +
         "        designation,\n" +
         "        typeSignalement,\n" +
@@ -25,7 +24,7 @@ import javax.persistence.Table;
         "        nomStatut\n" +
         "    FROM signalement_complet\n" +
         "    GROUP BY id, idClient, idTypeSignalement,\n" +
-        "            idRegion, idStatut, nom, prenom, username,\n" +
+        "            idRegion, idStatut, nom, prenom, email,\n" +
         "            dateHeure, designation,\n" +
         "            typeSignalement, nomRegion, nomStatut ")
 public class SignalementComplet {
@@ -38,7 +37,7 @@ public class SignalementComplet {
     private Long idstatut;
     private String nom;
     private String prenom;
-    private String username;
+    private String email;
     private String dateheure;
     private String designation;
     private String typesignalement;
@@ -101,12 +100,12 @@ public class SignalementComplet {
         this.prenom = prenom;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getDateheure() {
