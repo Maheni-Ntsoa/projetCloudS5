@@ -21,8 +21,8 @@ public class Admin {
     @Column(name = "prenom")
     private String prenom;
 
-    @Column(name = "username")
-    private String username;
+    @Column(name = "email")
+    private String email;
 
     @Column(name = "mdp")
     private String mdp;
@@ -31,11 +31,11 @@ public class Admin {
         super();
     }
 
-    public Admin(String nom, String prenom, String username, String mdp) {
+    public Admin(String nom, String prenom, String email, String mdp) {
         super();
         this.nom = nom;
         this.prenom = prenom;
-        this.username = username;
+        this.email = email;
         this.mdp = mdp;
     }
 
@@ -63,12 +63,12 @@ public class Admin {
         this.prenom = prenom;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getMdp() {

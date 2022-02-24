@@ -11,5 +11,5 @@ import java.util.List;
 
 @Repository
 @Transactional
-public interface StatStatutRepository extends JpaRepository<StatStatut, String>  {
+public interface StatStatutRepository extends JpaRepository<StatStatut, String> {
 }

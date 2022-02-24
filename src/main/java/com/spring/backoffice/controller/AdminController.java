@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +59,7 @@ public class AdminController {
     @RequestMapping("/accueil")
     public String accueil(Model model) {
         model.addAttribute("signalements", sr.findByIdRegionNull());
-        model.addAttribute("signalementComplets", scr.findAll());
+        model.addAttribute("signalementComplets", scr.findToutOrderDate());
         return "admin";
     }
 
@@ -70,7 +67,7 @@ public class AdminController {
     public String updateRegion(@PathVariable(value = "id") Long idSignalement, @RequestParam("idRegion") Long idRegion, Model model) throws Exception {
         sr.affecterRegion(idSignalement, idRegion);
         model.addAttribute("signalements", sr.findByIdRegionNull());
-        model.addAttribute("signalementComplets", scr.findAll());
+        model.addAttribute("signalementComplets", scr.findToutOrderDate());
         return "admin";
     }
 
@@ -90,7 +87,24 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/admin/login", method = RequestMethod.POST)
-    public String loginAdmin(@RequestParam("username") String username, @RequestParam("mdp") String mdp, Model model, HttpServletRequest request) throws Exception {
+    public String loginAdmin(@RequestParam("email") String email, @RequestParam("mdp") String mdp, Model model, HttpServletRequest request) throws Exception {
+        // Check valid password
+        String accents = "àâéèêëïîôùûçœæ";
+        char[] a = accents.toCharArray();
+        char[] m = mdp.toCharArray();
+        for(int i=0;i<mdp.length();i++) {
+            for (int u=0;u<accents.length();u++) {
+                if (m[i] == a[u]) {
+                    model.addAttribute("errorLogin", "accents");
+                    return "login";
+                }
+            }
+        }
+        if(mdp.length() < 8) {
+            model.addAttribute("errorLogin", "tropCourt");
+            return "login";
+        }
+
         // Creation SHA-256
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte[] hashInBytes = md.digest(mdp.getBytes(StandardCharsets.UTF_8));
@@ -102,13 +116,13 @@ public class AdminController {
         Admin admin = new Admin();
         List<Admin> la = new ArrayList<Admin>();
         try {
-            la = ar.findByUsernameAndMdp(username, "\\x" + sb.toString());
+            la = ar.findByEmailAndMdp(email, "\\x" + sb.toString());
             if (la.size() == 1) {
                 for (Admin ad : la) {
                     admin = ad;
                 }
                 model.addAttribute("signalements", sr.findByIdRegionNull());
-                model.addAttribute("signalementComplets", scr.findAll());
+                model.addAttribute("signalementComplets", scr.findToutOrderDate());
                 HttpSession session = request.getSession();
                 session.setAttribute("admin", admin);
                 return "admin";
@@ -232,7 +246,7 @@ public class AdminController {
     public String supprimerSignalement(@PathVariable(value = "id") Long id, Model model) {
         sr.deleteById(id);
         model.addAttribute("signalements", sr.findByIdRegionNull());
-        model.addAttribute("signalementComplets", scr.findAll());
+        model.addAttribute("signalementComplets", scr.findToutOrderDate());
         return "admin";
     }
 
@@ -249,7 +263,7 @@ public class AdminController {
 
     @RequestMapping("/admin/rechercheAvance")
     public String gotoSearch(Model model) {
-        model.addAttribute("listeSignalements", scr.findAll());
+        model.addAttribute("listeSignalements", scr.findToutOrderDate());
         model.addAttribute("typeSignalements", tsr.findAll());
         model.addAttribute("statuts", srep.findAll());
         return "rechercheAvance";
@@ -261,7 +275,7 @@ public class AdminController {
                                   Model model) throws Exception {
         List<SignalementComplet> lsc = new ArrayList<SignalementComplet>();
 
-        lsc = scr.findByIdTypesignalementAndIdstatut(idtypesignalement,idstatut);
+        lsc = scr.findByIdTypesignalementAndIdstatut(idtypesignalement, idstatut);
         model.addAttribute("listeSignalements", lsc);
         model.addAttribute("typeSignalements", tsr.findAll());
         model.addAttribute("statuts", srep.findAll());
